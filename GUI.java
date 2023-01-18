@@ -2,15 +2,19 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GUI implements ActionListener{
+public class GUI {
 
     static JButton[] buttons = new JButton[9];
-    // joueur1 : false -> X, joueur2 : true -> O
-    static boolean player = false;
+    Morpion m;
+    JFrame frame;
+
+    ImageIcon cross = new ImageIcon("IMG/cross.png");
+    ImageIcon circle = new ImageIcon("IMG/circle.png");
 
     GUI() {
-        JFrame frame = new JFrame();
-        Dimension d = new Dimension(400,400);
+        m = new Morpion();
+        frame = new JFrame();
+        Dimension d = new Dimension(400, 400);
 
         for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new JButton("");
@@ -27,19 +31,39 @@ public class GUI implements ActionListener{
         frame.setVisible(true);
     }
 
+    /** 
+     * @param  
+     */
     public void actionPerformed(ActionEvent e) {
-        switch(e.getActionCommand()){
 
-        }
         int i = Integer.parseInt(e.getActionCommand());
-        // System.out.println(i);
-        // System.out.println(e.getActionCommand());
-        if(player == false){
-            buttons[i].setText("X");
-        } else buttons[i].setText("O");
-        player = !player;
+        if (m.coup(i)) {
+            buttons[i].setText(m.getAutrePion());
+        }
+        if (m.getWinner() != m.getVide() && m.getWinner() != "nul") {
+            System.out.println("Partie gagné");
+            findePartie("Le joueur " + m.getAutrePion() + " a gagné");
+        } else if (m.getWinner() == "nul") {
+            findePartie("Il y a match nul, aucun des joueurs n'a gagné");
+        }
     }
 
+    /**
+     * Reinitialise l'affichage de la grille
+     */
+    private void reinitialiserAffichage() {
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i].setText(null);
+        }
+    }
+
+    private void findePartie(String str) {
+        int result = JOptionPane.showConfirmDialog(null, str + "\nVoulez-vous recommencer une partie ?", "Que voulez vous faire?", JOptionPane.YES_NO_OPTION);
+        if (result == 0) {
+            m.recommencer();
+            reinitialiserAffichage();
+        } else System.exit(0);
+    }
     public static void main(String[] args) {
         new GUI();
     }
