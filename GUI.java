@@ -1,35 +1,46 @@
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
+public class GUI implements ActionListener{
 
-public class GUI extends JFrame{
-    public GUI(){
-        super("Test JFrame");
-        JInternalFrame jif1 = new JInternalFrame("Dessous",true);
-        Dimension d = new Dimension(500, 200);
-		setMinimumSize(d);
-		setSize(d);
-        jif1.setVisible(true);
-        jif1.setBounds(50,50,150,150);
-        JInternalFrame jif2 = new JInternalFrame("Dessus",true);
-        jif2.setVisible(true);
-        jif2.setBounds(70,70,150,150);
-        JLayeredPane jdp = new JLayeredPane();
-        jdp.setBackground(new Color(150,80,80));
-        jdp.add(jif1);
-        jdp.add(jif2);
-        jdp.setLayer(jif1,JLayeredPane.DEFAULT_LAYER-10);
-        this.getContentPane().add(jdp);
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(500,300);
-        this.setVisible(true);
+    static JButton[] buttons = new JButton[9];
+    // joueur1 : false -> X, joueur2 : true -> O
+    static boolean player = false;
+
+    GUI() {
+        JFrame frame = new JFrame();
+        Dimension d = new Dimension(400,400);
+
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new JButton("");
+            buttons[i].setSize(d);
+            buttons[i].setActionCommand(String.valueOf(i));
+            buttons[i].addActionListener(e -> actionPerformed(e));
+            frame.add(buttons[i]);
+        }
+
+        // définir la disposition en grille de 3 lignes et 3 colonnes
+        frame.setLayout(new GridLayout(3, 3));
+        frame.setSize(600, 600);
+        frame.setResizable(true);
+        frame.setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        switch(e.getActionCommand()){
+
+        }
+        int i = Integer.parseInt(e.getActionCommand());
+        // System.out.println(i);
+        // System.out.println(e.getActionCommand());
+        if(player == false){
+            buttons[i].setText("X");
+        } else buttons[i].setText("O");
+        player = !player;
     }
 
     public static void main(String[] args) {
-        
         new GUI();
-
-
     }
-
 }
