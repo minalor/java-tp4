@@ -1,11 +1,13 @@
 import java.util.*;
-public class Morpion{
+import java.rmi.*;
+import java.rmi.server.UnicastRemoteObject;
+public class Morpion extends UnicastRemoteObject implements MorpionInterface{
 
     static String VIDE = " ", J1 = "X", J2 = "O";
     ArrayList<String> grille;
     boolean tourJoueur;
 
-    Morpion(){
+    public Morpion() throws RemoteException{
         this.grille = new ArrayList<String>();
         for(int i = 0; i < 9; i++){
             grille.add(VIDE);
@@ -17,15 +19,15 @@ public class Morpion{
 
 
 
-    public String getVide(){
+    public String getVide() throws RemoteException{
         return VIDE;
     }
 
-    public String getJ1(){
+    public String getJ1() throws RemoteException{
         return J1;
     }
 
-    public String getJ2(){
+    public String getJ2() throws RemoteException{
         return J2;
     }
 
@@ -44,7 +46,7 @@ public class Morpion{
     /**
      * Réinitialise la grille.
      */
-    public void recommencer(){
+    public void recommencer() throws RemoteException{
        this.grille = new ArrayList<String>();
         for(int i = 0; i < 9; i++){
             grille.add(VIDE);
@@ -59,7 +61,7 @@ public class Morpion{
      * @param bouton Numéro du bouton pressé sur la grille de 3x3
      * @return vrai si le coup a été placé
     */
-    public boolean coup(int bouton){
+    public boolean coup(int bouton) throws RemoteException{
 
         System.out.println("Coup du joueur " + this.getPion());
 
@@ -87,7 +89,7 @@ public class Morpion{
     /**
      * @return le numéro du joueur gagnant, et 0 s'il n'y en a pas.
      */
-    String getWinner(){
+    public String getWinner() throws RemoteException{
 
         // Vérification des lignes
         for(int i = 0; i < 3; i++){
@@ -118,6 +120,8 @@ public class Morpion{
     }
 
 
-
-
 }
+
+
+
+

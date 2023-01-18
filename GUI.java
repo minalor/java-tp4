@@ -2,8 +2,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.SwingPropertyChangeSupport;
+import javax.swing.plaf.synth.SynthScrollBarUI;
 
-//https://prod.liveshare.vsengsaas.visualstudio.com/join?285665614456331BB6C26921726F064CEDAA
+import java.rmi.*;
+
 public class GUI {
 
     static JButton[] buttons = new JButton[9];
@@ -16,7 +19,7 @@ public class GUI {
 
     ImageIcon circle = new ImageIcon("IMG/circle.png");
 
-    GUI() {
+    GUI() throws RemoteException {
         m = new Morpion();
         frame = new JFrame();
         Dimension d = new Dimension(400, 400);
@@ -25,7 +28,14 @@ public class GUI {
             buttons[i] = new JButton();
             buttons[i].setSize(d);
             buttons[i].setActionCommand(String.valueOf(i));
-            buttons[i].addActionListener(e -> actionPerformed(e));
+            buttons[i].addActionListener(e -> {
+                try { 
+                    actionPerformed(e);
+                } catch (RemoteException err) {
+                    System.out.println("Erreur de client vers serveur : " + err.getMessage());
+                } 
+            });
+
             frame.add(buttons[i]);
         }
 
@@ -43,7 +53,7 @@ public class GUI {
     /**
      * @param
      */
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e)  throws RemoteException{
 
         int i = Integer.parseInt(e.getActionCommand());
         if (m.coup(i)) {
@@ -51,10 +61,10 @@ public class GUI {
         }
         if (m.getWinner() != m.getVide() && m.getWinner() != "nul") {
             System.out.println("Partie gagné");
-            findePartie("Le joueur " + m.getAutrePion() + " a gagné");
+            finDePartie("Le joueur " + m.getAutrePion() + " a gagné");
         } 
         else if (m.getWinner() == "nul") {
-            findePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
+            finDePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
         }
         // System.out.println(m);
         // System.out.println(m.grille.contains(m.getVide()));
@@ -69,7 +79,7 @@ public class GUI {
         }
     }
 
-    private void findePartie(String str) {
+    private void finDePartie(String str) throws RemoteException{
         int result = JOptionPane.showConfirmDialog(null, str + "\nVoulez-vous recommencer une partie ?", "Que voulez vous faire?", JOptionPane.YES_NO_OPTION);
         if (result == 0) {
             m.recommencer();
@@ -78,7 +88,16 @@ public class GUI {
         else 
             System.exit(0);
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException{
         new GUI();
+
+        try {
+            Interface rev = (Interface) Naming.lookup("rmi://localhost:1099/MorpionCamille");
+            // String result = rev.reverseString(args[0]);
+            // System.out.println("L'inverse de " + args[0] + " est " + result);
+        } catch (Exception e) {
+            System.out.println("Erreur d'accès à l'objet distant.");
+            System.out.println(e.toString());
+        }
     }
 }
