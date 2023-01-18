@@ -9,11 +9,7 @@ public class Morpion{
             VIDE, VIDE, VIDE,
             VIDE, VIDE, VIDE,
         };
-
-
     }
-
-
     
     public String toString() {
         String text = "";
@@ -33,6 +29,41 @@ public class Morpion{
         this.grille[bouton] = joueur;
     }
 
+
+
+    /**
+     * @return le numéro du joueur gagnant, et 0 s'il n'y en a pas.
+     */
+    Integer getWinner(){
+
+        // Vérification des lignes
+        for(int i = 0; i < 3; i++){
+            if(grille[i*3] != 0 && grille[i*3] == grille[i*3 + 1] && grille[i*3] == grille[i*3 + 2])
+                return grille[i*3];
+        }
+
+
+        // Vérification des colonnes
+        for(int i = 0; i < 3; i++){
+            if(grille[i] != 0 &&grille[i] == grille[i + 3] && grille[i] == grille[i + 6])
+                return grille[i];
+        }
+
+
+        // Vérification des diagonales
+        for(int i = 0; i < 2; i++){
+            if(grille[i*2] != 0 && grille[i*2] == grille[4] && grille[i] == grille[8 - 2*i])
+                return grille[i];
+        }
+
+
+        return 0;
+    }
+
+
+
+
+
     public static void main(String[] args) {
 
 
@@ -40,9 +71,15 @@ public class Morpion{
         System.out.println(m);
 
         m.coup(J2, 5);
+        m.coup(J2, 2);
+        m.coup(J2, 8);
 
         System.out.println(m);
+        System.out.println(m.getWinner());
 
     }
+
+
+
 
 }
