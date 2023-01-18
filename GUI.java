@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 //https://prod.liveshare.vsengsaas.visualstudio.com/join?285665614456331BB6C26921726F064CEDAA
@@ -9,7 +10,10 @@ public class GUI {
     Morpion m;
     JFrame frame;
 
+
+
     ImageIcon cross = new ImageIcon("IMG/cross.png");
+
     ImageIcon circle = new ImageIcon("IMG/circle.png");
 
     GUI() {
@@ -18,7 +22,7 @@ public class GUI {
         Dimension d = new Dimension(400, 400);
 
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new JButton("");
+            buttons[i] = new JButton();
             buttons[i].setSize(d);
             buttons[i].setActionCommand(String.valueOf(i));
             buttons[i].addActionListener(e -> actionPerformed(e));
@@ -28,8 +32,12 @@ public class GUI {
         // définir la disposition en grille de 3 lignes et 3 colonnes
         frame.setLayout(new GridLayout(3, 3));
         frame.setSize(600, 600);
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setVisible(true);
+
+        cross = new ImageIcon( cross.getImage().getScaledInstance( 128, 128,  java.awt.Image.SCALE_SMOOTH ));
+        circle = new ImageIcon( circle.getImage().getScaledInstance( 128, 128,  java.awt.Image.SCALE_SMOOTH ));
+
     }
 
     /**
@@ -39,16 +47,17 @@ public class GUI {
 
         int i = Integer.parseInt(e.getActionCommand());
         if (m.coup(i)) {
-            buttons[i].setText(m.getAutrePion());
+            buttons[i].setIcon(m.getAutrePion() == m.getJ1() ? cross : circle);
         }
         if (m.getWinner() != m.getVide() && m.getWinner() != "nul") {
             System.out.println("Partie gagné");
             findePartie("Le joueur " + m.getAutrePion() + " a gagné");
-        } else if (m.getWinner() == "nul") {
+        } 
+        else if (m.getWinner() == "nul") {
             findePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
         }
-        System.out.println(m);
-        System.out.println(m.grille.contains(m.getVide()));
+        // System.out.println(m);
+        // System.out.println(m.grille.contains(m.getVide()));
     }
 
     /**
@@ -56,7 +65,7 @@ public class GUI {
      */
     private void reinitialiserAffichage() {
         for (int i = 0; i < buttons.length; i++) {
-            buttons[i].setText(null);
+            buttons[i].setIcon(null);
         }
     }
 
@@ -65,7 +74,9 @@ public class GUI {
         if (result == 0) {
             m.recommencer();
             reinitialiserAffichage();
-        } else System.exit(0);
+        } 
+        else 
+            System.exit(0);
     }
     public static void main(String[] args) {
         new GUI();

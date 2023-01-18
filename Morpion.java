@@ -70,11 +70,11 @@ public class Morpion{
     }
 
     public String getPion(){
-        return tourJoueur ? "X" : "O";
+        return tourJoueur ? J1 : J2;
     }
 
     public String getAutrePion(){
-        return tourJoueur ? "O" : "X";
+        return tourJoueur ? J2 : J1;
     }
 
 
