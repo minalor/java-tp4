@@ -3,11 +3,16 @@ public class Morpion{
 
     static String VIDE = " ", J1 = "X", J2 = "O";
     ArrayList<String> grille;
+    boolean tourJoueur;
+
     Morpion(){
         this.grille = new ArrayList<String>();
         for(int i = 0; i < 9; i++){
             grille.add(VIDE);
         }
+
+
+        tourJoueur = Math.random() < 0.5;
     }
 
 
@@ -70,11 +75,11 @@ public class Morpion{
     }
 
     public String getPion(){
-        return tourJoueur ? J1 : J2;
+        return tourJoueur ? "X" : "O";
     }
 
     public String getAutrePion(){
-        return tourJoueur ? J2 : J1;
+        return tourJoueur ? "O" : "X";
     }
 
 
