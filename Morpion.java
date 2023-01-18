@@ -1,7 +1,10 @@
+import java.util.Random;
+import java.math.*;
 public class Morpion{
 
     static int VIDE = 0, J1 = 1, J2 = 2;
     Integer[] grille;
+    boolean tourJoueur1;
 
     Morpion(){
         this.grille = new Integer[] {
@@ -9,7 +12,13 @@ public class Morpion{
             VIDE, VIDE, VIDE,
             VIDE, VIDE, VIDE,
         };
+
+        tourJoueur1 = Math.random() < 0.5;
     }
+
+
+
+
     
     public String toString() {
         String text = "";
@@ -21,12 +30,27 @@ public class Morpion{
 
 
     /**
+     * Réinitialise la grille.
+     */
+    public void recommencer(){
+        this.grille = new Integer[] {
+            VIDE, VIDE, VIDE,
+            VIDE, VIDE, VIDE,
+            VIDE, VIDE, VIDE,
+        };
+
+        tourJoueur1 = !tourJoueur1;
+    }
+
+
+    /**
      * Place un pion sur le plateau
      * @param joueur Numéro du joueur (1 ou 2)
      * @param bouton Numéro du bouton pressé sur la grille de 3x3
     */
-    public void coup(int joueur, int bouton){
-        this.grille[bouton] = joueur;
+    public void coup(int bouton){
+        this.grille[bouton] = tourJoueur1 ? 1 : 2;
+        tourJoueur1 = !tourJoueur1; 
     }
 
 
@@ -61,9 +85,6 @@ public class Morpion{
     }
 
 
-
-
-
     public static void main(String[] args) {
 
 
@@ -79,6 +100,7 @@ public class Morpion{
 
     }
 
+    
 
 
 
