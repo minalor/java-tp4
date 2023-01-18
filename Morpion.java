@@ -7,7 +7,7 @@ public class Morpion{
 
     Morpion(){
         this.grille = new ArrayList<String>();
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 9; i++){
             grille.add(VIDE);
         }
 
@@ -16,7 +16,7 @@ public class Morpion{
     }
 
 
-    
+
     public String getVide(){
         return VIDE;
     }
@@ -46,7 +46,7 @@ public class Morpion{
      */
     public void recommencer(){
        this.grille = new ArrayList<String>();
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 9; i++){
             grille.add(VIDE);
         }
         tourJoueur = !tourJoueur;
@@ -65,7 +65,7 @@ public class Morpion{
 
         if(grille.get(bouton) == VIDE){
             this.grille.set(bouton, tourJoueur ? J1 : J2);
-            tourJoueur = !tourJoueur; 
+            tourJoueur = !tourJoueur;
             System.out.println("Succès du coup");
             return true;
         }
@@ -109,12 +109,11 @@ public class Morpion{
                 return grille.get(i*2);
         }
 
-        
+
         if(grille.contains(VIDE) == false){
             System.out.println("nul");
             return "nul";
         }
-
         return VIDE;
     }
 

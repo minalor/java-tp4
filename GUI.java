@@ -31,8 +31,8 @@ public class GUI {
         frame.setVisible(true);
     }
 
-    /** 
-     * @param  
+    /**
+     * @param
      */
     public void actionPerformed(ActionEvent e) {
 
@@ -44,8 +44,10 @@ public class GUI {
             System.out.println("Partie gagné");
             findePartie("Le joueur " + m.getAutrePion() + " a gagné");
         } else if (m.getWinner() == "nul") {
-            findePartie("Il y a match nul, aucun des joueurs n'a gagné");
+            findePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
         }
+        System.out.println(m);
+        System.out.println(m.grille.contains(m.getVide()));
     }
 
     /**
