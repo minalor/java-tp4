@@ -10,5 +10,6 @@ public interface MorpionInterface extends Remote {
     public String getVide() throws RemoteException;
     public String getJ1() throws RemoteException;
     public String getJ2() throws RemoteException;
+    public void finDePartie(String str) throws RemoteException;
     
 }

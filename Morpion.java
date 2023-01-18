@@ -55,6 +55,11 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface{
     }
 
 
+
+    public void finDePartie(String str) throws RemoteException{
+
+    }
+
     /**
      * Place un pion sur le plateau
      * @param joueur Numéro du joueur (1 ou 2)
