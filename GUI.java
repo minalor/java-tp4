@@ -29,6 +29,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
     // Pion du joueur qui sera affecté par le serveur ("X" ou "O")
     String pion;
 
+    // Chargement des deux images de pions
     ImageIcon cross = new ImageIcon("IMG/cross.png");
     ImageIcon circle = new ImageIcon("IMG/circle.png"); 
 
@@ -57,7 +58,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         //
         JTextField nomJ = new JTextField();
         JPanel namePanel = new JPanel(new GridLayout(2, 2));
-        namePanel.add(new JLabel("Player name: "));
+        namePanel.add(new JLabel("Player name : "));
         namePanel.add(nomJ);
         // int result = JOptionPane.showConfirmDialog(null, namePanel, "Enter player name", JOptionPane.OK_CANCEL_OPTION);
         // if (result == JOptionPane.OK_OPTION) {
@@ -113,7 +114,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         int i = Integer.parseInt(e.getActionCommand());
         try {
             if (m.coup(i, pion)) {
-                System.out.println("Pion du client : " + pion + "\n image affectée : " + getIconPion(pion).getDescription());
+    
                 buttons[i].setIcon(getIconPion(pion));
                 buttons[i].setDisabledIcon(getIconPion(pion));
                 buttons[i].setEnabled(false);
@@ -121,11 +122,14 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
                 // Notifier le joueur adverse du coup
                 m.notifierCoup(i, pion);
             }
-            System.out.println("Resultat getWinner -> :" + m.getWinner());
+
             if (!m.getWinner().equals(" ") && !m.getWinner().equals("nul")) {
-                System.out.println("Partie gagné");
+
+                System.out.println("Partie gagnée");
                 findePartie("Le joueur " + m.getAutrePion() + " a gagné");
+
             } else if (m.getWinner() != null && m.getWinner().equals("nul")) {
+
                 findePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
             }
         } catch (RemoteException ex) {
@@ -158,7 +162,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      */
     private void findePartie(String str) {
         int result = JOptionPane.showConfirmDialog(null, str + "\nVoulez-vous recommencer une partie ?",
-                "Que voulez vous faire?", JOptionPane.YES_NO_OPTION);
+                "Que voulez-vous faire?", JOptionPane.YES_NO_OPTION);
         if (result == 0) {
             try {
                 m.recommencer();
@@ -201,8 +205,8 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      */
     public static void main(String[] args) throws RemoteException {
         GUI gui = new GUI();
-        gui.pion = gui.m.attribuerPion();
-        System.out.println("Pion de ce client : " + gui.pion);
+        gui.pion = gui.m.seConnecter();
+        System.out.println("Pion de ce joueur : " + gui.pion);
         gui.m.registerCallback(gui);
     }
 

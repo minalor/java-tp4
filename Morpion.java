@@ -35,6 +35,13 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
      */
     private boolean firstConnection = true;
 
+
+    /**
+     * Est initialisée à false, et sera true quand les deux clients seront connectés.
+     * Tant que gameStarted est false, personne ne peux jouer.
+     */
+    private boolean gameStarted = false;
+
     /**
      *
      * La grille de jeu de Morpion
@@ -66,7 +73,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
         }
         this.callbacks = new ArrayList<Callback>();
         tourJoueur = Math.random() < 0.5 ? J1 : J2;
-        System.out.println("Pion joueur morpion server premier : " + tourJoueur);
+        System.out.println("Joueur qui commence : " + tourJoueur);
     }
 
     /**
@@ -118,9 +125,8 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
 
     /**
      *
-     * Méthode pour afficher le plateau de jeu en mode texte.
-     *
-     * @return une chaine de caractère contenant le plateau de jeu
+     * Affiche le plateau de jeu en texte.
+     * @return une chaine de caractères contenant le plateau de jeu
      */
 
     public String toString() {
@@ -140,23 +146,17 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
      * @throws RemoteException en cas d'erreur de communication distante
      */
     public void recommencer() throws RemoteException {
-        // this.grille = new ArrayList<String>();
-        // for (int i = 0; i < 9; i++) {
-        // grille.add(VIDE);
-        // }
-        // tourJoueur = !tourJoueur;
+
 
         for (int i = 0; i < grille.size(); i++) {
             grille.set(i, VIDE);
         }
-        // randomize the starting player
+
+        // Un joueur aléatoire commence
         tourJoueur = Math.random() < 0.5 ? J1 : J2;
         
         for (Callback c : callbacks)
             c.updateReset();
-        
-        // notify the clients of the reset
-        //callbacks.clear();
 
     }
 
@@ -184,7 +184,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
 
         System.out.println("Coup / Pion du joueur : " + pionJoueur + "/ au tour de : " + tourJoueur);
 
-        if (tourJoueur.equals(pionJoueur)) {
+        if (tourJoueur.equals(pionJoueur) && gameStarted == true) {
             this.grille.set(bouton, tourJoueur);
             pionSuivant();
             System.out.println("Succès du coup");
@@ -209,7 +209,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
 
     /**
      *
-     * Méthode pour obtenir le pion de l'autre joueur.
+     * Méthode pour obtenir le pion du joueur qui ne joue pas actuellement.
      *
      * @return Le pion du l'autre joueur (J1 ou J2)
      * @throws RemoteException Si une erreur se produit lors de la communication RMI
@@ -293,23 +293,29 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
         for (Callback callback : callbacks) {
             try {
                 callback.updateCoup(button, pion);
-                //System.out.println("Ping update grille");
+
             } catch (RemoteException e) {
-                // Handle the exception
                 e.printStackTrace();
             }
         }
 
     }
 
-
-    public String attribuerPion(){
+    /**
+     * Attribue à chaque client son pion (X ou O).
+     * Quand les deux joueurs sont connectés, la partie commence.
+     * @return Le pion attribué au joueur qui se connecte.
+     */
+    public String seConnecter(){
         if(firstConnection){
             firstConnection = false;
             return tourJoueur;
         }
-        else
+        else{
+            // On lance la partie
+            gameStarted = true;
             return tourJoueur == J1 ? J2 : J1;
+        }
     }
 
     /**

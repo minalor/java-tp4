@@ -100,5 +100,5 @@ public interface MorpionInterface extends Remote {
     // void setNomJoueur(String player) throws RemoteException;
 
 
-    String attribuerPion() throws RemoteException;
+    String seConnecter() throws RemoteException;
 }
