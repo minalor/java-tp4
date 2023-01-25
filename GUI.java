@@ -109,7 +109,8 @@ public class GUI implements ActionListener, Callback {
                 // Notifier le joueur adverse du coup
                 m.notifierCoup(i);
             }
-            if (m.getWinner() != null && !m.getWinner().equals("nul")) {
+            System.out.println("Resultat getWinner -> :" + m.getWinner());
+            if (!m.getWinner().equals(" ") && !m.getWinner().equals("nul")) {
                 System.out.println("Partie gagné");
                 findePartie("Le joueur " + m.getAutrePion() + " a gagné");
             } else if (m.getWinner() != null && m.getWinner().equals("nul")) {

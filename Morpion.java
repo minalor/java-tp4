@@ -57,7 +57,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
         for (int i = 0; i < 9; i++) {
             grille.add(VIDE);
         }
-
+        this.callbacks = new ArrayList<Callback>();
         tourJoueur = Math.random() < 0.5;
     }
 
@@ -131,11 +131,19 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
      * @throws RemoteException en cas d'erreur de communication distante
      */
     public void recommencer() throws RemoteException {
-        this.grille = new ArrayList<String>();
-        for (int i = 0; i < 9; i++) {
-            grille.add(VIDE);
+        // this.grille = new ArrayList<String>();
+        // for (int i = 0; i < 9; i++) {
+        // grille.add(VIDE);
+        // }
+        // tourJoueur = !tourJoueur;
+
+        for (int i = 0; i < grille.size(); i++) {
+            grille.set(i, VIDE);
         }
-        tourJoueur = !tourJoueur;
+        // randomize the starting player
+        tourJoueur = Math.random() < 0.5;
+        // notify the clients of the reset
+        callbacks.clear();
     }
 
     /**
@@ -188,7 +196,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
      * Méthode pour obtenir le joueur gagnant de la partie.
      *
      * @return Le pion du joueur gagnant, "nul" si la partie est finie sans gagnant,
-     *         et " " s'il n'y a pas encore de gagnant
+     *         et VIDE s'il n'y a pas encore de gagnant
      * @throws RemoteException Si une erreur se produit lors de la communication RMI
      */
     public String getWinner() throws RemoteException {
@@ -259,6 +267,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
         for (Callback callback : callbacks) {
             try {
                 callback.update(button, tourJoueur ? J1 : J2);
+                System.out.println("Ping update grille");
             } catch (RemoteException e) {
                 // Handle the exception
                 e.printStackTrace();

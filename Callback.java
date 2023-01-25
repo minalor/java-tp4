@@ -20,4 +20,5 @@ public interface Callback extends Remote {
      * @throws RemoteException
      */
     void update(int button, String player) throws RemoteException;
+
 }
