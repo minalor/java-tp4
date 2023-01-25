@@ -26,8 +26,11 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
     JFrame frame;
     JLabel CourantJ;
 
+    // Pion du joueur qui sera affecté par le serveur ("X" ou "O")
+    String pion;
+
     ImageIcon cross = new ImageIcon("IMG/cross.png");
-    ImageIcon circle = new ImageIcon("IMG/circle.png");
+    ImageIcon circle = new ImageIcon("IMG/circle.png"); 
 
     /**
      * Constructeur de la classe GUI qui initialise l'interface graphique pour le
@@ -50,19 +53,23 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
             e.printStackTrace();
         }
 
+        cross.setDescription("Description de l'image cross.png");
+        circle.setDescription("Description de l'image circle.png");
+        
+
         //
         JTextField nomJ = new JTextField();
         JPanel namePanel = new JPanel(new GridLayout(2, 2));
         namePanel.add(new JLabel("Player name: "));
         namePanel.add(nomJ);
-        int result = JOptionPane.showConfirmDialog(null, namePanel, "Enter player name", JOptionPane.OK_CANCEL_OPTION);
-        if (result == JOptionPane.OK_OPTION) {
-            try {
-                m.setNomJoueur(nomJ.getText());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
+        // int result = JOptionPane.showConfirmDialog(null, namePanel, "Enter player name", JOptionPane.OK_CANCEL_OPTION);
+        // if (result == JOptionPane.OK_OPTION) {
+        //     try {
+        //         m.setNomJoueur(nomJ.getText());
+        //     } catch (RemoteException e) {
+        //         e.printStackTrace();
+        //     }
+        // }
 
         CourantJ = new JLabel("Tour du J1");
 
@@ -89,6 +96,14 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
     }
 
+
+    ImageIcon getIconPion(String pion) throws RemoteException{
+        if(pion.equals(m.getJ1()))
+            return this.cross;
+        else
+            return this.circle;
+    }
+
     /**
      * Méthode pour traiter les événements de bouton de la grille de jeu. Il appelle
      * la méthode de coup du serveur RMI, met à jour l'interface graphique, et
@@ -100,13 +115,13 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         int i = Integer.parseInt(e.getActionCommand());
         try {
-            if (m.coup(i)) {
-                buttons[i].setIcon(m.getAutrePion().equals(m.getJ1()) ? cross : circle);
-                buttons[i].setDisabledIcon(m.getAutrePion().equals(m.getJ1()) ? cross : circle);
+            if (m.coup(i, pion)) {
+                System.out.println("Pion du client : " + pion + "\n image affectée : " + getIconPion(pion).getDescription());
+                buttons[i].setIcon(getIconPion(pion));
+                buttons[i].setDisabledIcon(getIconPion(pion));
                 buttons[i].setEnabled(false);
                 CourantJ.setText("Tour" + m.getPion());
                 // Notifier le joueur adverse du coup
-                System.out.println("khgdjhl");
                 m.notifierCoup(i);
             }
             System.out.println("Resultat getWinner -> :" + m.getWinner());
@@ -127,7 +142,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      * icônes
      * et en activant les boutons.
      */
-    private void reinitialiserAffichage() {
+    public void updateReset() {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].setIcon(null);
             buttons[i].setEnabled(true);
@@ -150,7 +165,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         if (result == 0) {
             try {
                 m.recommencer();
-                reinitialiserAffichage();
+                updateReset();
             } catch (Exception e) {
                 System.out.println("Error in RMI communication: " + e.toString());
                 e.printStackTrace();
@@ -172,7 +187,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      *
      * @throws RemoteException Si une erreur se produit lors de la communication RMI
      */
-    public void update(int button, String player) throws RemoteException {
+    public void updateCoup(int button, String player) throws RemoteException {
         buttons[button].setIcon(player.equals(m.getJ1()) ? cross : circle);
         buttons[button].setDisabledIcon(player.equals(m.getJ1()) ? cross : circle);
         buttons[button].setEnabled(false);
@@ -189,6 +204,8 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      */
     public static void main(String[] args) throws RemoteException {
         GUI gui = new GUI();
+        gui.pion = gui.m.attribuerPion();
+        System.out.println("Pion de ce client : " + gui.pion);
         gui.m.registerCallback(gui);
     }
 

@@ -19,6 +19,6 @@ public interface Callback extends Remote {
      * @param player Le joueur qui a joué le coup
      * @throws RemoteException
      */
-    void update(int button, String player) throws RemoteException;
-
+    void updateCoup(int button, String player) throws RemoteException;
+    void updateReset() throws RemoteException;
 }

@@ -17,7 +17,7 @@ public interface MorpionInterface extends Remote {
      * @return vrai si le coup est valide, faux sinon
      * @throws RemoteException
      */
-    boolean coup(int bouton) throws RemoteException;
+    boolean coup(int bouton, String pionJoueur) throws RemoteException;
 
     /**
      * Récupère le pion du joueur actuel
@@ -97,5 +97,8 @@ public interface MorpionInterface extends Remote {
      * @throws RemoteException en cas d'erreur de communication distante
      */
 
-    void setNomJoueur(String player) throws RemoteException;
+    // void setNomJoueur(String player) throws RemoteException;
+
+
+    String attribuerPion() throws RemoteException;
 }
