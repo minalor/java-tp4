@@ -24,14 +24,16 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
     static JButton[] buttons = new JButton[9];
     MorpionInterface m;
     JFrame frame;
-    JLabel CourantJ;
+    static JLabel joueur, tour;
+
+    static String nomJoueur = "";
 
     // Pion du joueur qui sera affecté par le serveur ("X" ou "O")
-    String pion;
+    static String pion;
 
     // Chargement des deux images de pions
     ImageIcon cross = new ImageIcon("IMG/cross.png");
-    ImageIcon circle = new ImageIcon("IMG/circle.png"); 
+    ImageIcon circle = new ImageIcon("IMG/circle.png");
 
     /**
      * Constructeur de la classe GUI qui initialise l'interface graphique pour le
@@ -40,7 +42,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      * également l'objet RMI MorpionInterface et enregistre
      * un callback pour recevoir les mises à jour du serveur.
      */
-    GUI()throws RemoteException {
+    GUI() throws RemoteException {
         try {
             m = (MorpionInterface) Naming.lookup("rmi://localhost/MorpionService");
         } catch (Exception e) {
@@ -53,50 +55,68 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-      
-
-        //
-        JTextField nomJ = new JTextField();
-        JPanel namePanel = new JPanel(new GridLayout(2, 2));
-        namePanel.add(new JLabel("Player name : "));
-        namePanel.add(nomJ);
-        // int result = JOptionPane.showConfirmDialog(null, namePanel, "Enter player name", JOptionPane.OK_CANCEL_OPTION);
-        // if (result == JOptionPane.OK_OPTION) {
-        //     try {
-        //         m.setNomJoueur(nomJ.getText());
-        //     } catch (RemoteException e) {
-        //         e.printStackTrace();
-        //     }
-        // }
-
-        CourantJ = new JLabel("Tour du J1");
-
-        frame = new JFrame();
-        Dimension d = new Dimension(400, 400);
-
-        for (int i = 0; i < buttons.length; i++) {
-            buttons[i] = new JButton();
-            buttons[i].setSize(d);
-            buttons[i].setActionCommand(String.valueOf(i));
-            buttons[i].addActionListener(e -> actionPerformed(e));
-            frame.add(buttons[i]);
-        }
-
-        // frame.add(CourantJ);
-        // définir la disposition en grille de 3 lignes et 3 colonnes
-        frame.setLayout(new GridLayout(3, 3));
-        frame.setSize(600, 600);
-        frame.setResizable(false);
-        frame.setVisible(true);
 
         cross = new ImageIcon(cross.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
         circle = new ImageIcon(circle.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
 
+        while (nomJoueur.trim().isEmpty()) {
+            nomJoueur = JOptionPane.showInputDialog(null, "Entrez le nom du joueur :", "Nom du joueur",
+                    JOptionPane.QUESTION_MESSAGE);
+
+            if (nomJoueur == null) {
+                System.exit(0);
+            } else if (nomJoueur.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vous devez entrer un nom de joueur valide.", "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        // Créer une nouvelle fenêtre
+        frame = new JFrame("Morpion");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Créer un label
+        joueur = new JLabel("Joueur : ");
+        joueur.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Ajouter une bordure vide au label
+
+        // Créer un second label
+        tour = new JLabel("Au tour du joueur : ");
+        tour.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Ajouter une bordure vide au label
+
+        // Créer un JPanel avec un GridBagLayout
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        leftPanel.add(joueur, c);
+        c.gridy = 1;
+        leftPanel.add(tour, c);
+        frame.add(leftPanel, BorderLayout.WEST);
+
+        // Créer un panneau pour contenir les boutons
+        JPanel boutons = new JPanel(new GridLayout(3, 3));
+        for (int i = 0; i < buttons.length; i++) {
+            buttons[i] = new JButton();
+            buttons[i].setSize(400, 400);
+            buttons[i].setActionCommand(String.valueOf(i));
+            buttons[i].addActionListener(e -> actionPerformed(e));
+            boutons.add(buttons[i]);
+        }
+        boutons.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Ajouter une bordure vide au panneau
+
+        // Ajouter le panneau à la fenêtre
+        frame.add(boutons, BorderLayout.CENTER);
+
+        // Emballer et afficher la fenêtre
+        frame.pack();
+        frame.setSize(950, 800);
+        frame.setResizable(false);
+        frame.setVisible(true);
+
     }
 
-
-    ImageIcon getIconPion(String pion) throws RemoteException{
-        if(pion.equals(m.getJ1()))
+    ImageIcon getIconPion(String pion) throws RemoteException {
+        if (pion.equals(m.getJ1()))
             return this.cross;
         else
             return this.circle;
@@ -114,11 +134,10 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         int i = Integer.parseInt(e.getActionCommand());
         try {
             if (m.coup(i, pion)) {
-    
+
                 buttons[i].setIcon(getIconPion(pion));
                 buttons[i].setDisabledIcon(getIconPion(pion));
                 buttons[i].setEnabled(false);
-                CourantJ.setText("Tour" + m.getPion());
                 // Notifier le joueur adverse du coup
                 m.notifierCoup(i, pion);
             }
@@ -192,6 +211,54 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         buttons[button].setIcon(player.equals(m.getJ1()) ? cross : circle);
         buttons[button].setDisabledIcon(player.equals(m.getJ1()) ? cross : circle);
         buttons[button].setEnabled(false);
+        majTexte();
+    }
+
+    private void majTexte() throws RemoteException {
+        joueur.setText("Joueur : " + nomJoueur);
+        if (m.getPion().equals(pion))
+            tour.setText("A votre tour !");
+        else
+            tour.setText("Au tour de l'autre joueur !");
+    }
+
+    private void fenetreAttente() throws RemoteException {
+
+        this.frame.setFocusableWindowState(false);
+
+        for(int i = 0; i < buttons.length; i ++){
+            buttons[i].setEnabled(false);
+        }
+
+
+
+        // Create a new JFrame for the waiting window
+        JFrame frameAttente = new JFrame("Attente...");
+        // Create a label to display the waiting message
+        JLabel messageAttente = new JLabel("Attente d'un autre joueur...");
+        // Add the label to the frame
+        frameAttente.add(messageAttente);
+        // Set the size and location of the frame
+        frameAttente.setSize(250, 100);
+        frameAttente.setLocationRelativeTo(null);
+        frameAttente.setAlwaysOnTop(true);
+        frameAttente.setDefaultCloseOperation(0);
+        // Make the frame visible
+        frameAttente.setVisible(true);
+        while (!m.statutJeu()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // Close the waiting window when the game starts
+        frameAttente.dispose();
+        this.frame.setFocusableWindowState(true);
+
+        for(int i = 0; i < buttons.length; i ++){
+            buttons[i].setEnabled(true);
+        }
     }
 
     /**
@@ -205,9 +272,11 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      */
     public static void main(String[] args) throws RemoteException {
         GUI gui = new GUI();
-        gui.pion = gui.m.seConnecter();
-        System.out.println("Pion de ce joueur : " + gui.pion);
+        pion = gui.m.seConnecter();
+        System.out.println("Pion de ce joueur : " + pion);
         gui.m.registerCallback(gui);
+        gui.majTexte();
+        gui.fenetreAttente();
     }
 
 }

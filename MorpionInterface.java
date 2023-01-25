@@ -101,4 +101,7 @@ public interface MorpionInterface extends Remote {
 
 
     String seConnecter() throws RemoteException;
+
+    boolean statutJeu() throws RemoteException;
+
 }

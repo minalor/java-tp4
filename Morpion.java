@@ -154,7 +154,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
 
         // Un joueur aléatoire commence
         tourJoueur = Math.random() < 0.5 ? J1 : J2;
-        
+
         for (Callback c : callbacks)
             c.updateReset();
 
@@ -316,6 +316,11 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
             gameStarted = true;
             return tourJoueur == J1 ? J2 : J1;
         }
+    }
+
+    @Override
+    public boolean statutJeu() throws RemoteException{
+        return gameStarted;
     }
 
     /**
