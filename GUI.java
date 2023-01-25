@@ -52,10 +52,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
-        cross.setDescription("Description de l'image cross.png");
-        circle.setDescription("Description de l'image circle.png");
-        
+      
 
         //
         JTextField nomJ = new JTextField();
@@ -122,7 +119,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
                 buttons[i].setEnabled(false);
                 CourantJ.setText("Tour" + m.getPion());
                 // Notifier le joueur adverse du coup
-                m.notifierCoup(i);
+                m.notifierCoup(i, pion);
             }
             System.out.println("Resultat getWinner -> :" + m.getWinner());
             if (!m.getWinner().equals(" ") && !m.getWinner().equals("nul")) {

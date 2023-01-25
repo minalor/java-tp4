@@ -86,7 +86,7 @@ public interface MorpionInterface extends Remote {
      * @param button l'index de la case qui a été jouée
      * @throws RemoteException en cas d'erreur de communication distante
      */
-    void notifierCoup(int button) throws RemoteException;
+    void notifierCoup(int button, String pion) throws RemoteException;
 
     /**
      *

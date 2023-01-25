@@ -188,7 +188,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
             this.grille.set(bouton, tourJoueur);
             pionSuivant();
             System.out.println("Succès du coup");
-            notifierCoup(bouton);
+            notifierCoup(bouton, pionJoueur);
             return true;
         }
 
@@ -289,10 +289,10 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
      * @throws RemoteException Si une erreur se produit lors de la communication RMI
      */
     @Override
-    public void notifierCoup(int button) throws RemoteException {
+    public void notifierCoup(int button, String pion) throws RemoteException {
         for (Callback callback : callbacks) {
             try {
-                callback.updateCoup(button, tourJoueur);
+                callback.updateCoup(button, pion);
                 //System.out.println("Ping update grille");
             } catch (RemoteException e) {
                 // Handle the exception
