@@ -75,13 +75,17 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         frame = new JFrame("Morpion");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        Dimension taillemax = new Dimension(300,15);
         // Créer un label
         joueur = new JLabel("Joueur : ");
         joueur.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Ajouter une bordure vide au label
+        joueur.setPreferredSize(taillemax);
 
         // Créer un second label
         tour = new JLabel("Au tour du joueur : ");
         tour.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Ajouter une bordure vide au label
+        tour.setPreferredSize(taillemax);
+
 
         // Créer un JPanel avec un GridBagLayout
         JPanel leftPanel = new JPanel(new GridBagLayout());
@@ -109,7 +113,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         // Emballer et afficher la fenêtre
         frame.pack();
-        frame.setSize(950, 800);
+        frame.setSize(1200, 970);
         frame.setResizable(false);
         frame.setVisible(true);
 
