@@ -15,10 +15,12 @@
 
 import java.awt.event.*;
 import java.rmi.*;
+import java.rmi.server.*;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class GUI implements ActionListener, Callback {
+public class GUI extends UnicastRemoteObject implements ActionListener, Callback {
     static JButton[] buttons = new JButton[9];
     MorpionInterface m;
     JFrame frame;
@@ -34,7 +36,7 @@ public class GUI implements ActionListener, Callback {
      * également l'objet RMI MorpionInterface et enregistre
      * un callback pour recevoir les mises à jour du serveur.
      */
-    GUI() {
+    GUI()throws RemoteException {
         try {
             m = (MorpionInterface) Naming.lookup("rmi://localhost/MorpionService");
         } catch (Exception e) {
@@ -49,17 +51,14 @@ public class GUI implements ActionListener, Callback {
         }
 
         //
-        JTextField NomJ1 = new JTextField();
-        JTextField NomJ2 = new JTextField();
+        JTextField nomJ = new JTextField();
         JPanel namePanel = new JPanel(new GridLayout(2, 2));
-        namePanel.add(new JLabel("Player 1 name: "));
-        namePanel.add(NomJ1);
-        namePanel.add(new JLabel("Player 2 name: "));
-        namePanel.add(NomJ2);
-        int result = JOptionPane.showConfirmDialog(null, namePanel, "Enter player names", JOptionPane.OK_CANCEL_OPTION);
+        namePanel.add(new JLabel("Player name: "));
+        namePanel.add(nomJ);
+        int result = JOptionPane.showConfirmDialog(null, namePanel, "Enter player name", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
             try {
-                m.setNomJoueur(NomJ1.getText(), NomJ2.getText());
+                m.setNomJoueur(nomJ.getText());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -107,6 +106,7 @@ public class GUI implements ActionListener, Callback {
                 buttons[i].setEnabled(false);
                 CourantJ.setText("Tour" + m.getPion());
                 // Notifier le joueur adverse du coup
+                System.out.println("khgdjhl");
                 m.notifierCoup(i);
             }
             System.out.println("Resultat getWinner -> :" + m.getWinner());

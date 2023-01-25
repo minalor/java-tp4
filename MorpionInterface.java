@@ -97,5 +97,5 @@ public interface MorpionInterface extends Remote {
      * @throws RemoteException en cas d'erreur de communication distante
      */
 
-    void setNomJoueur(String player1, String player2) throws RemoteException;
+    void setNomJoueur(String player) throws RemoteException;
 }

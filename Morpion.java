@@ -69,9 +69,10 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
      * @param player2 le nom du joueur 2
      * @throws RemoteException en cas d'erreur de communication distante
      */
-    public void setNomJoueur(String player1, String player2) throws RemoteException {
-        J1 = player1;
-        J2 = player2;
+    public void setNomJoueur(String player) throws RemoteException {
+        if(J1 == null)
+            J1 = player;
+        else J2 = player;
     }
 
     /**
