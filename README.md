@@ -1,4 +1,4 @@
 # java-tp5
-TP5 du module POO en Java 
+TP5 du module POO en Java
 
-test camille
+//TODO : ajouter warning quand un client se deconnecte
