@@ -75,7 +75,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         frame = new JFrame("Morpion");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Dimension taillemax = new Dimension(300,15);
+        Dimension taillemax = new Dimension(300, 15);
         // Créer un label
         joueur = new JLabel("Joueur : ");
         joueur.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Ajouter une bordure vide au label
@@ -85,7 +85,6 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         tour = new JLabel("Au tour du joueur : ");
         tour.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40)); // Ajouter une bordure vide au label
         tour.setPreferredSize(taillemax);
-
 
         // Créer un JPanel avec un GridBagLayout
         JPanel leftPanel = new JPanel(new GridBagLayout());
@@ -119,6 +118,12 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
     }
 
+    /**
+     * Méthode pour associer un cercle / croix a un joueur
+     *
+     * @param pion la chaine de caractères correspondant au joueur
+     * @return Retourne l'image correspondant au pion du joueur
+     */
     ImageIcon getIconPion(String pion) throws RemoteException {
         if (pion.equals(m.getJ1()))
             return this.cross;
@@ -218,6 +223,12 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         majTexte();
     }
 
+    /**
+     * Methode pour mettre a jour le texte dans les JLabels pour savoir qui doit
+     * jouer
+     *
+     * @throws RemoteException Si une erreur se produit lors de la communication RMI
+     */
     private void majTexte() throws RemoteException {
         joueur.setText("Joueur : " + nomJoueur);
         if (m.getPion().equals(pion))
@@ -230,11 +241,9 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         this.frame.setFocusableWindowState(false);
 
-        for(int i = 0; i < buttons.length; i ++){
+        for (int i = 0; i < buttons.length; i++) {
             buttons[i].setEnabled(false);
         }
-
-
 
         // Create a new JFrame for the waiting window
         JFrame frameAttente = new JFrame("Attente...");
@@ -260,7 +269,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         frameAttente.dispose();
         this.frame.setFocusableWindowState(true);
 
-        for(int i = 0; i < buttons.length; i ++){
+        for (int i = 0; i < buttons.length; i++) {
             buttons[i].setEnabled(true);
         }
     }

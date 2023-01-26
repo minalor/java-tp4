@@ -100,8 +100,22 @@ public interface MorpionInterface extends Remote {
     // void setNomJoueur(String player) throws RemoteException;
 
 
+    /**
+     * Attribue à chaque client son pion (X ou O).
+     * Quand les deux joueurs sont connectés, la partie commence.
+     *
+     * @return Le pion attribué au joueur qui se connecte.
+     */
     String seConnecter() throws RemoteException;
 
+    /**
+     * Methode permettant de renvoyer l'etat du jeu pour savoir s'il a commencé ou
+     * non
+     *
+     * @return le boolean gameStarted
+     *
+     * @throws RemoteException Si une erreur se produit lors de la communication RMI
+     */
     boolean statutJeu() throws RemoteException;
 
 }
