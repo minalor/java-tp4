@@ -20,9 +20,13 @@ import java.rmi.server.*;
 import javax.swing.*;
 import java.awt.*;
 
+import java.io.IOException;
+import javax.sound.sampled.*;
+
 public class GUI extends UnicastRemoteObject implements ActionListener, Callback {
     static JButton[] buttons = new JButton[9];
     MorpionInterface m;
+    Son son;
     JFrame frame;
     static JLabel joueur, tour;
 
@@ -153,11 +157,12 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
             if (!m.getWinner().equals(" ") && !m.getWinner().equals("nul")) {
 
+                Son.playSound("win.wav");
                 System.out.println("Partie gagnée");
                 findePartie("Le joueur " + m.getAutrePion() + " a gagné");
 
             } else if (m.getWinner() != null && m.getWinner().equals("nul")) {
-
+                Son.playSound("loose.wav");
                 findePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
             }
         } catch (RemoteException ex) {
