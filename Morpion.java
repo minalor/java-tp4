@@ -170,6 +170,11 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
             tourJoueur = J1;
     }
 
+
+    public void finDePartie(String str) throws RemoteException{
+
+    }
+
     /**
      *
      * Méthode pour jouer un coup sur la grille de jeu.
