@@ -89,18 +89,6 @@ public interface MorpionInterface extends Remote {
     void notifierCoup(int button, String pion) throws RemoteException;
 
     /**
-     *
-     * Méthode pour définir les noms des joueurs.
-     *
-     * @param player1 le nom du joueur 1
-     * @param player2 le nom du joueur 2
-     * @throws RemoteException en cas d'erreur de communication distante
-     */
-
-    // void setNomJoueur(String player) throws RemoteException;
-
-
-    /**
      * Attribue à chaque client son pion (X ou O).
      * Quand les deux joueurs sont connectés, la partie commence.
      *

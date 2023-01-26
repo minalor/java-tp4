@@ -112,7 +112,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         // Emballer et afficher la fenêtre
         frame.pack();
-        frame.setSize(1200, 970);
+        frame.setSize(1000, 800);
         frame.setResizable(false);
         frame.setVisible(true);
 
