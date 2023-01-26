@@ -62,6 +62,15 @@ public interface MorpionInterface extends Remote {
 
     /**
      *
+     * Méthode pour récupérer le symbole du joueur 2.
+     *
+     * @return le symbole du joueur 2
+     * @throws RemoteException en cas d'erreur de communication distante
+     */
+    String getJ2() throws RemoteException;
+
+    /**
+     *
      * Méthode pour enregistrer un objet Callback pour recevoir des notifications de
      * changements de jeu.
      *

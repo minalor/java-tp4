@@ -19,18 +19,18 @@ import java.rmi.server.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.*;
 
-import java.io.IOException;
-import javax.sound.sampled.*;
 
 public class GUI extends UnicastRemoteObject implements ActionListener, Callback {
     static JButton[] buttons = new JButton[9];
     MorpionInterface m;
-    Son son;
     JFrame frame;
     static JLabel joueur, tour;
 
     static String nomJoueur = "";
+    Map<String, String> sons = new HashMap<String, String>();
+
 
     // Pion du joueur qui sera affecté par le serveur ("X" ou "O")
     static String pion;
@@ -120,6 +120,11 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         frame.setResizable(false);
         frame.setVisible(true);
 
+        sons.put("gagné","win.wav");
+        sons.put("perdu","loose.wav");
+        sons.put(m.getJ1(),"cross.wav");
+        sons.put(m.getJ2(),"circle.wav");
+
     }
 
     /**
@@ -147,7 +152,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         int i = Integer.parseInt(e.getActionCommand());
         try {
             if (m.coup(i, pion)) {
-
+                Son.playSound(pion);
                 buttons[i].setIcon(getIconPion(pion));
                 buttons[i].setDisabledIcon(getIconPion(pion));
                 buttons[i].setEnabled(false);
@@ -157,12 +162,12 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
             if (!m.getWinner().equals(" ") && !m.getWinner().equals("nul")) {
 
-                Son.playSound("win.wav");
+                Son.playSound(sons.get("gagné"));
                 System.out.println("Partie gagnée");
                 findePartie("Le joueur " + m.getAutrePion() + " a gagné");
 
             } else if (m.getWinner() != null && m.getWinner().equals("nul")) {
-                Son.playSound("loose.wav");
+                Son.playSound(sons.get("perdu"));
                 findePartie("Il y a match nul, aucun des joueurs n'a gagné.\n");
             }
         } catch (RemoteException ex) {
