@@ -125,9 +125,6 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         sons.put("perdu","loose.wav");
         sons.put("X","cross.wav");
         sons.put("O","circle.wav");
-
-        System.out.println(sons.toString());
-
     }
 
     /**
