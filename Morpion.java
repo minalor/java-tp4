@@ -170,11 +170,6 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
             tourJoueur = J1;
     }
 
-
-    public void finDePartie(String str) throws RemoteException{
-
-    }
-
     /**
      *
      * Méthode pour jouer un coup sur la grille de jeu.
@@ -343,7 +338,7 @@ public class Morpion extends UnicastRemoteObject implements MorpionInterface {
     public static void main(String[] args) {
         try {
             Morpion morpion = new Morpion();
-            Naming.rebind("rmi://localhost:1099/MorpionService", morpion);
+            Naming.rebind("rmi://localhost/MorpionService", morpion);
             System.out.println("Morpion RMI server is ready.");
         } catch (Exception e) {
             System.out.println("Error in RMI communication: " + e.toString());

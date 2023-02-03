@@ -21,7 +21,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 
-
 public class GUI extends UnicastRemoteObject implements ActionListener, Callback {
     static JButton[] buttons = new JButton[9];
     MorpionInterface m;
@@ -31,6 +30,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
     static String nomJoueur = "";
     Map<String, String> sons;
 
+    private String adresseIP = "localhost";
 
     // Pion du joueur qui sera affecté par le serveur ("X" ou "O")
     static String pion;
@@ -48,7 +48,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      */
     GUI() throws RemoteException {
         try {
-            m = (MorpionInterface) Naming.lookup("rmi://localhost/MorpionService");
+            m = (MorpionInterface) Naming.lookup("rmi://" + adresseIP + "/MorpionService");
         } catch (Exception e) {
             System.out.println("Client exception: " + e.toString());
             e.printStackTrace();
@@ -62,6 +62,9 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         cross = new ImageIcon(cross.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
         circle = new ImageIcon(circle.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
+
+        adresseIP = JOptionPane.showInputDialog(null, "Entrez l'adresse IP (vide : localhost) :", "localhost",
+                JOptionPane.QUESTION_MESSAGE);
 
         while (nomJoueur.trim().isEmpty()) {
             nomJoueur = JOptionPane.showInputDialog(null, "Entrez le nom du joueur :", "Nom du joueur",
@@ -121,10 +124,10 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         frame.setVisible(true);
 
         sons = new HashMap<String, String>();
-        sons.put("gagné","win.wav");
-        sons.put("perdu","loose.wav");
-        sons.put("X","cross.wav");
-        sons.put("O","circle.wav");
+        sons.put("gagné", "win.wav");
+        sons.put("perdu", "loose.wav");
+        sons.put("X", "cross.wav");
+        sons.put("O", "circle.wav");
     }
 
     /**
