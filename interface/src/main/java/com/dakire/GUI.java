@@ -35,6 +35,8 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
     static String nomJoueur = "";
     Map<String, String> sons;
 
+    private String adresseIP = "localhost";
+
     // Pion du joueur qui sera affecté par le serveur ("X" ou "O")
     static String pion;
 
@@ -51,7 +53,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      */
     GUI() throws RemoteException {
         try {
-            m =  (com.dakire.MorpionInterface) Naming.lookup("rmi://localhost:2023/MorpionService");
+            m = (com.dakire.MorpionInterface) Naming.lookup("rmi://" + adresseIP + ":2023/MorpionService");
         } catch (Exception e) {
             System.out.println("Client exception: " + e.toString());
             e.printStackTrace();
@@ -65,6 +67,9 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         cross = new ImageIcon(cross.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
         circle = new ImageIcon(circle.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
+
+        adresseIP = JOptionPane.showInputDialog(null, "Entrez l'adresse IP (vide : localhost) :", "localhost",
+                JOptionPane.QUESTION_MESSAGE);
 
         while (nomJoueur.trim().isEmpty()) {
             nomJoueur = JOptionPane.showInputDialog(null, "Entrez le nom du joueur :", "Nom du joueur",
