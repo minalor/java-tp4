@@ -1,3 +1,5 @@
 *.class
-target/
+shared/target/
+interface/target/
+serveur/target/
 
