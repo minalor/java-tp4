@@ -1,5 +1,7 @@
 *.class
-**/target/
-**/target/
-**/target/
+*.jar
+*.lst
+**/target/*
+**/target/*
+**/target/*
 
