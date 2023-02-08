@@ -1,25 +1,48 @@
 package com.dakire;
 
-import java.rmi.*;
-import java.rmi.registry.*;
-import java.rmi.server.*;
-import java.util.*;
+
+/**
+ * LINUX:
+ * javac --module-path $JAVAFX --add-modules javafx.controls *.java
+ * java --module-path $JAVAFX --add-modules javafx.controls <nom_fich>
+ * WIN:
+ * javac --module-path 'C:\Program Files\Java\javafx-sdk-19.0.2.1\lib' --add-modules javafx.controls *.java
+ * java --module-path 'C:\Program Files\Java\javafx-sdk-19.0.2.1\lib' --add-modules javafx.controls <nom_fich>
+ */
+
+/**
+
+* Classe qui représente l'interface graphique de l'application de jeu de Morpion en utilisant RMI.
+
+* Cette classe implémente l'interface {@link ActionListener} pour gérer les événements de clic sur les boutons de l'interface,
+
+* et l'interface {@link Callback} pour recevoir les mises à jour des coups joués par l'autre joueur.
+
+* Elle utilise une instance de {@link MorpionInterface} pour communiquer avec le serveur RMI et pour accéder aux méthodes de jeu.
+* (Coté client)
+
+* @author Camille & Guillaume
+*/
 
 import javafx.application.*;
-import javafx.event.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
-import javafx.scene.text.*;
+import javafx.scene.text.Text;
 import javafx.stage.*;
 
-public class GUI extends Application implements Callback {
+import java.awt.event.*;
+import java.rmi.*;
+import java.rmi.server.*;
+import java.util.*;
+
+public class GUIJFX extends Application implements Callback{
     private Button[] buttons = new Button[9];
-    private Label label_Joueur;
-    private Label label_Tour;
+    private Text joueur = new Text("Joueur : ");
+    private Text tour = new Text("Au tour du joueur : ");
     Stage stage = new Stage();
 
     MorpionInterface m;
@@ -33,70 +56,37 @@ public class GUI extends Application implements Callback {
     static String pion;
 
     // Chargement des deux images de pions
-    Image cross = new Image(getClass().getClassLoader().getResource("cross.png").toString());
-    Image circle = new Image(getClass().getClassLoader().getResource("circle.png").toString());
+    // ImageIcon cross = new ImageIcon("IMG/cross.png");
+    // ImageIcon circle = new ImageIcon("IMG/circle.png");
+    Image cross = new Image("IMG/cross.png");
+    Image circle = new Image("IMG/circle.png");
 
-    String playerPiece;
 
-    public GUI() throws RemoteException {
-        try {
-            Registry registry = LocateRegistry.getRegistry(adresseIP, 2023);
-            m = (com.dakire.MorpionInterface) registry.lookup("MorpionService");
-            m.registerCallback(this);
-        } catch (Exception e) {
-            System.out.println("Client exception: " + e.toString());
-            e.printStackTrace();
-        }
+    @Override
+    public void start(Stage stage) {
+        BorderPane root = new BorderPane();
 
-        try {
-            m.registerCallback(this);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-        while (nomJoueur.trim().isEmpty()) {
-            nomJoueur = javafx.scene.control.TextInputDialog.showTextInput(stage, "Enter player name:","Player name").orElse("");
-
-            if (nomJoueur.trim().isEmpty()) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-                        javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("You must enter a valid player name.");
-                alert.showAndWait();
-            }
-        }
-
-        stage = new Stage();
-        stage.setTitle("Tic Tac Toe");
-
-        label_Joueur = new Label("Player: ");
-        label_Tour = new Label("Turn: ");
-
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-
-        for (int i = 0; i < 9; i++) {
+        GridPane boutons = new GridPane();
+        for (int i = 0; i < buttons.length; i++) {
             buttons[i] = new Button();
-            buttons[i].setMinSize(128, 128);
-            buttons[i].setOnAction((EventHandler<ActionEvent>) this);
-            grid.add(buttons[i], i % 3, i / 3);
+            buttons[i].setMinSize(200, 200);
+            buttons[i].setUserData(String.valueOf(i));
+            buttons[i].setOnAction(e -> actionPerformed(e));
+            boutons.add(buttons[i], i % 3, i / 3);
         }
+        boutons.setAlignment(Pos.CENTER);
+        root.setCenter(boutons);
 
-        grid.add(label_Joueur, 0, 3);
-        grid.add(label_Tour, 1, 3);
+        VBox leftPane = new VBox(joueur, tour);
+        leftPane.setAlignment(Pos.CENTER);
+        leftPane.setSpacing(20);
+        root.setLeft(leftPane);
 
-        Scene scene = new Scene(grid, 512, 512);
+        Scene scene = new Scene(root, 1000, 800);
         stage.setScene(scene);
+        stage.setTitle("Morpion");
+        stage.setResizable(false);
         stage.show();
-
-        sons = new HashMap<String, String>();
-        sons.put("gagné", "win.wav");
-        sons.put("perdu", "loose.wav");
-        sons.put("X", "cross.wav");
-        sons.put("O", "circle.wav");
     }
 
     /**
@@ -231,11 +221,11 @@ public class GUI extends Application implements Callback {
      * @throws RemoteException Si une erreur se produit lors de la communication RMI
      */
     private void majTexte() throws RemoteException {
-        label_Tour.setText("Joueur : " + nomJoueur);
+        joueur.setText("Joueur : " + nomJoueur);
         if (m.getPion().equals(pion))
-            label_Tour.setText("A votre tour !");
+            tour.setText("A votre tour !");
         else
-            label_Tour.setText("Au tour de l'autre joueur !");
+            tour.setText("Au tour de l'autre joueur !");
     }
 
     private void fenetreAttente() throws RemoteException {
@@ -279,18 +269,7 @@ public class GUI extends Application implements Callback {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) throws RemoteException {
-        GUI gui = new GUI();
-        pion = gui.m.seConnecter();
-        System.out.println("Pion de ce joueur : " + pion);
-        gui.m.registerCallback(gui);
-        gui.majTexte();
-        gui.fenetreAttente();
-    }
-
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         launch(args);
     }
-
 }
