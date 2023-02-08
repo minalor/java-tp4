@@ -1,7 +1,9 @@
-*.class
-*.jar
-*.lst
+**/*.class
+**/*.jar
+**/*.lst
 **/target/*
 **/target/*
 **/target/*
+
+.vscode/
 
