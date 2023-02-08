@@ -52,6 +52,8 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
      * un callback pour recevoir les mises à jour du serveur.
      */
     GUI() throws RemoteException {
+        adresseIP = JOptionPane.showInputDialog(null, "Entrez l'adresse IP (vide : localhost) :", "localhost",
+                JOptionPane.QUESTION_MESSAGE);
         try {
             m = (com.dakire.MorpionInterface) Naming.lookup("rmi://" + adresseIP + ":2023/MorpionService");
         } catch (Exception e) {
@@ -67,9 +69,6 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
 
         cross = new ImageIcon(cross.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
         circle = new ImageIcon(circle.getImage().getScaledInstance(128, 128, java.awt.Image.SCALE_SMOOTH));
-
-        adresseIP = JOptionPane.showInputDialog(null, "Entrez l'adresse IP (vide : localhost) :", "localhost",
-                JOptionPane.QUESTION_MESSAGE);
 
         while (nomJoueur.trim().isEmpty()) {
             nomJoueur = JOptionPane.showInputDialog(null, "Entrez le nom du joueur :", "Nom du joueur",
