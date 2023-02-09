@@ -34,21 +34,67 @@
 
   <build>
     <plugins>
+
+      <!-- The JavaFX Maven Plugin is used to compile and package the JavaFX application -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.3.0</version>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+          <fork>true</fork>
+          <executable>${JAVA_HOME}/bin/javac</executable>
+          <modulePath>${project.basedir}/src/main/java</modulePath>
+          <arguments>
+            <systemProperties>
+              <systemProperty>
+                <key>java.net.SocketPermission</key>
+                <value>"*", "accept, connect, listen, resolve"</value>
+                <key>java.security.AllPermission</key>
+              </systemProperty>
+            </systemProperties>
+            <moduleInfoFile>${project.basedir}/src/main/java/module-info.java</moduleInfoFile>
+          </arguments>
+          <classpathScope>compile</classpathScope>
+          <resourceBundles>
+            <resourceBundle>com.dakire.morpion.shared:shared:1.0</resourceBundle>
+          </resourceBundles>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+            </manifest>
+          </archive>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>jlink</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
+
+       <!-- The Maven Shade Plugin is used to package all the required dependencies into a single JAR
+      file -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>1.6</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                  <resource>META-INF/module-info.java</resource>
+                </transformer>
+              </transformers>
+            </configuration>
           </execution>
         </executions>
       </plugin>
