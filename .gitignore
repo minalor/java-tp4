@@ -1,5 +1,8 @@
 *.class
 *.jar
 *.lst
-target/
+.vscode/
 
+interface/target/
+serveur/target/
+shared/target/
