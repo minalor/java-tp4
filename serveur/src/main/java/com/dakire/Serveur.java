@@ -1,5 +1,8 @@
 package com.dakire;
 
+
+import com.dakire.MorpionInterface;
+import com.dakire.Callback;
 /**
 
  * Classe implémentant l'interface MorpionInterface pour jouer à un jeu de morpion en mode distribué avec RMI.
@@ -14,7 +17,7 @@ import java.rmi.registry.*;
 import java.rmi.server.*;
 import java.util.*;
 
-public class Serveur extends UnicastRemoteObject implements com.dakire.MorpionInterface {
+public class Serveur extends UnicastRemoteObject implements MorpionInterface {
     /**
      *
      * Représente le pion du joueur 1

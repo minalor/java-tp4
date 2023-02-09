@@ -15,8 +15,10 @@ package com.dakire;
  * @author Camille & Guillaume
 */
 
+import com.dakire.MorpionInterface;
+import com.dakire.Callback;
+
 import java.awt.event.*;
-import java.net.URISyntaxException;
 import java.rmi.*;
 import java.rmi.server.*;
 
@@ -41,8 +43,8 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
     static String pion;
 
     // Chargement des deux images de pions
-    ImageIcon cross = new ImageIcon(getClass().getClassLoader().getResource("cross.png"));
-    ImageIcon circle = new ImageIcon(getClass().getClassLoader().getResource("circle.png"));
+    ImageIcon cross = new ImageIcon(getClass().getClassLoader().getResource("img/cross.png"));
+    ImageIcon circle = new ImageIcon(getClass().getClassLoader().getResource("img/circle.png"));
 
     /**
      * Constructeur de la classe GUI qui initialise l'interface graphique pour le
@@ -128,10 +130,10 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         frame.setVisible(true);
 
         sons = new HashMap<String, String>();
-        sons.put("gagné", "win.wav");
-        sons.put("perdu", "loose.wav");
-        sons.put("X", "cross.wav");
-        sons.put("O", "circle.wav");
+        sons.put("gagné", "audio/win.wav");
+        sons.put("perdu", "audio/loose.wav");
+        sons.put("X", "audio/cross.wav");
+        sons.put("O", "audio/circle.wav");
     }
 
     /**
@@ -159,6 +161,7 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         int i = Integer.parseInt(e.getActionCommand());
         try {
             if (m.coup(i, pion)) {
+                System.out.println("sons pion :" + sons.get(pion));
                 Son.playSound(sons.get(pion));
                 buttons[i].setIcon(getIconPion(pion));
                 buttons[i].setDisabledIcon(getIconPion(pion));
