@@ -62,7 +62,7 @@
           </arguments>
           <classpathScope>compile</classpathScope>
           <resourceBundles>
-            <resourceBundle>com.dakire.morpion.shared:shared:1.0</resourceBundle>
+            <resourceBundle>com.dakire.morpion:shared:1.0</resourceBundle>
           </resourceBundles>
           <archive>
             <manifest>

@@ -161,7 +161,6 @@ public class GUI extends UnicastRemoteObject implements ActionListener, Callback
         int i = Integer.parseInt(e.getActionCommand());
         try {
             if (m.coup(i, pion)) {
-                System.out.println("sons pion :" + sons.get(pion));
                 Son.playSound(sons.get(pion));
                 buttons[i].setIcon(getIconPion(pion));
                 buttons[i].setDisabledIcon(getIconPion(pion));
