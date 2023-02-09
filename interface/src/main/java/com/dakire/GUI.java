@@ -15,8 +15,6 @@ package com.dakire;
  * @author Camille & Guillaume
 */
 
-import com.dakire.MorpionInterface;
-import com.dakire.Callback;
 
 import java.awt.event.*;
 import java.rmi.*;

@@ -1,8 +1,5 @@
 package com.dakire;
 
-
-import com.dakire.MorpionInterface;
-import com.dakire.Callback;
 /**
 
  * Classe implémentant l'interface MorpionInterface pour jouer à un jeu de morpion en mode distribué avec RMI.
