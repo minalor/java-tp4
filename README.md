@@ -5,11 +5,11 @@ Pas besoin de lancer un serveur rmi dans la console avec la commande rmiregistry
 Le programme le lance automatiquement sur le port 2023 avec le nom "MorpionService"
 
 Pour compiler:
-mvn clean compile package
+mvn install clean compile package
 
-Pour executer:
+Pour executer le serveur:
+ java -jar ./serveur/target/serveur-1.0.jar
 
-TODO :
-- ajouter warning quand un client se deconnecte
-- Interface un peu trop grande sur un petit ecran, on ne peut pas voir les 2 clients correctement
-- Probleme son, detection vainqueur
+Pour execcuter un client:
+ java -jar ./interface/target/interface-1.0.jar
+
